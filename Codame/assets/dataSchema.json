@@ -1,0 +1,7 @@
+[
+    {"timestamp": 1395262912, "app":10, "ibeacons": [102]},
+    {"timestamp": 1395263008, "app":10, "ibeacons": [102, 1201]},
+    {"timestamp": 1395275987, "app":10, "ibeacons": [102]},
+    {"timestamp": 1395310324, "app":10, "ibeacons": [101]},
+    {"timestamp": 1395332654, "app":10, "ibeacons": []},
+]

@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>EaselJS Example: WebGL Basics</title>
+
+</head>
+
+    <body onload="init();" style="background-color: black;">
+    <canvas id="testCanvas" width="800" height="500" style="background-image:url(assets/background.png);"></canvas>
+
+    <!-- OFFLINE MODE
+    <script type="text/javascript" src="http://code.createjs.com/preloadjs-0.4.1.min.js"></script>
+    <script type="text/javascript" src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>  -->
+
+    <!-- Note: All core EaselJS classes are listed here: -->
+    <script type="text/javascript" src="vendors/createjs/events/Event.js"></script>
+    <script type="text/javascript" src="vendors/createjs/events/EventDispatcher.js"></script>
+    <script type="text/javascript" src="vendors/createjs/utils/IndexOf.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/UID.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/Ticker.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Matrix2D.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Point.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Rectangle.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Shadow.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteSheet.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Graphics.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/DisplayObject.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Container.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Stage.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Bitmap.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Sprite.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/BitmapAnimation.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/BitmapText.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Shape.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Text.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/DOMElement.js"></script>
+
+    <!-- WebGL specific classes -->
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteContainer.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteStage.js"></script>
+
+    <script type="text/javascript" src="vendors/easeljs/events/MouseEvent.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/Filter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/BlurFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorMatrixFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorMatrix.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/AlphaMapFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/ui/ButtonHelper.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/ui/Touch.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/SpriteSheetUtils.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/Ticker.js"></script>
+
+
+    <script type="text/javascript" src="assets/preloadjs-NEXT.min.js"></script>
+
+    <!-- WebGL specific classes -->
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteContainer.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteStage.js"></script>
+
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="js/resources.js"></script>
+    <script type="text/javascript" src="js/pulsar.js"></script>
+
+    <script>
+        function init() {
+            window.dataviz = new codamePlayground.Controller();
+            window.dataviz.start();
+        };
+    </script>
+        
+    </body>
+</html>

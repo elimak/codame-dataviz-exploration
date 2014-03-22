@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>EaselJS Example: WebGL Basics</title>
+
+</head>
+
+    <body onload="init();" style="background-color: black;">
+    <canvas id="testCanvas" width="800" height="500" style="background-image:url(assets/background.png);"></canvas>
+
+    <!-- Note: All core EaselJS classes are listed here: -->
+    <script type="text/javascript" src="vendors/createjs/events/Event.js"></script>
+    <script type="text/javascript" src="vendors/createjs/events/EventDispatcher.js"></script>
+    <script type="text/javascript" src="vendors/createjs/utils/IndexOf.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/UID.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/Ticker.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Matrix2D.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Point.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/geom/Rectangle.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Shadow.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteSheet.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Graphics.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/DisplayObject.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Container.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Stage.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Bitmap.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Sprite.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/BitmapAnimation.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/BitmapText.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Shape.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/Text.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/DOMElement.js"></script>
+
+    <!-- WebGL specific classes -->
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteContainer.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/display/SpriteStage.js"></script>
+
+    <script type="text/javascript" src="vendors/easeljs/events/MouseEvent.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/Filter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/BlurFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorMatrixFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/ColorMatrix.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/filters/AlphaMapFilter.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/ui/ButtonHelper.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/ui/Touch.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/SpriteSheetUtils.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="vendors/easeljs/utils/Ticker.js"></script>
+
+
+    <script type="text/javascript" src="assets/preloadjs-NEXT.min.js"></script>
+
+    <!-- We also provide hosted minified versions of all CreateJS libraries.
+      http://code.createjs.com -->
+
+    <script>
+        var stage;
+        var yellowCircle0;
+
+        var LIGHT_WIDTH = 125;
+        var LIGHT_HEIGHT = 132;
+        var centralPoints = [{x:150, y:150},{x:295, y:215},{x:450, y:250},{x:120, y:280} ];
+        var angles = [30, 150, 270];
+        var radius = [15,15,15];
+        var frequency = 15;
+        var amplitude = 0.2;
+
+        var variations = [-2,-1,0,1,2];
+
+        var lights =[];
+
+        var lightsSS;
+        var intensityInd = [25, 12,98,64 ];
+        var intensityInc = [0.2, 0.2, 0.2, 0.2];
+
+        function init() {
+            if (location.search.match(/c2d/i)) {
+                // force it to use Context2D if c2d appears in the query string: ex. Runners.html?c2d
+                stage = new createjs.Stage("testCanvas");
+            } else {
+                stage = new createjs.SpriteStage("testCanvas");
+            }
+
+            var queue = new createjs.LoadQueue();
+            queue.on("complete", handleLoad, this);
+            queue.loadManifest([
+                {id: "lights", src: "assets/lights2.png"},
+                {id: "yellowCircle", src: "assets/yellowCircle.png"}
+            ], true);
+        }
+
+        function handleLoad(evt) {
+            setupUI(evt.target);
+            createjs.Ticker.timingMode = createjs.Ticker.RAF;
+            createjs.Ticker.on("tick", tick, this);
+        }
+
+        function tick(evt) {
+
+           var cm = new createjs.ColorMatrix();
+            cm.adjustColor(20, 20, 20, 100);
+
+            var colorFilter = new createjs.ColorMatrixFilter(cm);
+
+            var random =  Math.round(Math.random()*30);
+
+            for(var j=0; j< lights.length; j++){
+                lights[j].setIntensity(intensityInd[j]);
+                intensityInd[j] += intensityInc[j];
+                if(intensityInd[j] > 100) intensityInc[j] = -0.15;
+                if(intensityInd[j] < 0) intensityInc[j] = +0.15;
+            }
+
+            for(var i=0; i < 3; i++){
+                radius[i] = radius[i] + Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude;
+                angles[i] =  angles[i]+1;
+            }
+            stage.update(evt);
+        }
+
+        function convertAngle(degree){
+            return degree * Math.PI / 180;
+        }
+
+        function setupUI(queue) {
+            lightsSS = new createjs.SpriteSheet({
+                "animations":{
+                    "light0": [5, 5],
+                    "light1": [0, 0],
+                    "light2": [1, 1],
+                    "light3": [2, 2],
+                    "light4": [3, 3],
+                    "light5": [4, 4]},
+                    "images": ["assets/lights.png"],
+                    "frames": {
+                        "height": 125,
+                        "width":132,
+                        "regX": 0,
+                        "regY": 0,
+                        "count": 6
+                      }
+                });
+
+
+            for(var j=0; j< centralPoints.length; j++){
+                var l = lightMaker();
+                l.target.x = centralPoints[j].x;
+                l.target.y = centralPoints[j].y;
+                stage.addChild(l.target);
+                lights.push(l);
+            }
+        }
+
+        function lightMaker() {
+            var lightObj = new createjs.SpriteContainer();
+            lightObj.layers = [];
+            lightObj.layers[0] = getLayer("light0"); // coldest lights
+            lightObj.layers[1] = getLayer("light1");
+            lightObj.layers[2] = getLayer("light2");
+            lightObj.layers[3] = getLayer("light3");
+            lightObj.layers[4] = getLayer("light4"); // warmest lights
+
+            function getLayer(imgId){
+
+                var res = [];
+                for(var i=0; i < 3; i++){
+                    var l = new createjs.Sprite(lightsSS, imgId);
+                    l.x = Math.cos(convertAngle(angles[i])) * radius[i] - LIGHT_WIDTH/2;
+                    l.y = Math.sin(convertAngle(angles[i])) * radius[i] - LIGHT_HEIGHT/2;
+                    res.push(l);
+                    lightObj.addChild(l);
+                }
+                return res;
+            }
+
+            function getRangeValue (range1, range2, value){
+                 if( value < range1[0] || value > range1[1] ){
+                     return 0;
+                 }
+                else{
+                     var prcnt = Math.round((value - range1[0]) / (range1[1] - range1[0]) * 100);
+
+                     return (range2[1] - range2[0]) * prcnt / 100 + range2[0];
+                 }
+            }
+
+            function setLayers(index, intensity){
+                var set = lightObj.layers[index];
+                var sX, sY, a;
+
+                switch (index){
+                    case 0:         // range is [0, 20]
+                        sX = sY = getRangeValue([-10, 30], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
+                        a = getRangeValue([-10, 10], [0, 1], intensity);             // scale range is [0.1, 1.2]
+                        a = a!= 0 ? a : getRangeValue([10, 30], [1, 0], intensity);  // scale range is [0.1, 1.2]
+                       // console.log("case 0 = "+sX+" -alpha- "+a);
+                        break;
+                    case 1:         // range is [20, 40]
+                        sX = sY = getRangeValue([10, 50], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
+                        a = getRangeValue([10, 30], [0, 1], intensity);             // scale range is [0.1, 1.2]
+                        a = a!= 0 ? a : getRangeValue([30, 50], [1, 0], intensity);  // scale range is [0.1, 1.2]
+                      //  console.log("case 1 = "+sX+" -alpha- "+a);
+                        break;
+                    case 2:         // range is [40, 60]
+                        sX = sY = getRangeValue([30, 70], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
+                        a = getRangeValue([30, 50], [0, 1], intensity);             // scale range is [0.1, 1.2]
+                        a = a!= 0 ? a : getRangeValue([50, 70], [1, 0], intensity);  // scale range is [0.1, 1.2]
+                       // console.log("case 2 = "+sX+" -alpha- "+a);
+                        break;
+                    case 3:         // range is [60, 80]
+                        sX = sY = getRangeValue([50, 90], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
+                        a = getRangeValue([50, 70], [0, 1], intensity);             // scale range is [0.1, 1.2]
+                        a = a!= 0 ? a : getRangeValue([70, 90], [1, 0], intensity);  // scale range is [0.1, 1.2]
+                      //  console.log("case 3 = "+sX+" -alpha- "+a);
+                        break;
+                    case 4:         // range is [80, 100]
+                        sX = sY = getRangeValue([70, 110], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
+                        a = getRangeValue([70, 90], [0, 1], intensity);             // scale range is [0.1, 1.2]
+                        a = a!= 0 ? a : getRangeValue([90,110], [1, 0], intensity);  // scale range is [0.1, 1.2]
+                     //   console.log("case 4 = "+sX+" -alpha- "+a);
+                        break;
+                }
+                for(var i=0; i < 3; i++){
+                    var l = set[i];
+                    l.scaleX = sX;
+                    l.scaleY = sY;
+                    l.x = Math.cos(convertAngle(angles[i])) * radius[i]*(sX+0.2) - LIGHT_WIDTH/2*sX;
+                    l.y = Math.sin(convertAngle(angles[i])) * radius[i]*(sY+0.2) - LIGHT_HEIGHT/2*sY;
+                    l.alpha = a;
+                }
+            }
+
+
+            var topLight = new createjs.Sprite(lightsSS, "light5");
+            topLight.scaleX = 0.5;
+            topLight.scaleY = 0.5;
+            topLight.x = - LIGHT_WIDTH/2 * topLight.scaleX;
+            topLight.y = - LIGHT_HEIGHT/2 * topLight.scaleY;
+            lightObj.addChild(topLight);
+
+            return {
+                target: lightObj,
+                setIntensity : function( intensity ){ // from 0 to 100
+                   setLayers(0, intensity);
+                   setLayers(1, intensity);
+                   setLayers(2, intensity);
+                   setLayers(3, intensity);
+                   setLayers(4, intensity);
+                }
+            };
+        }
+
+    </script>
+        
+    </body>
+</html>
