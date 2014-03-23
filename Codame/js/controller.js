@@ -24,11 +24,13 @@ this.codamePlayground = this.codamePlayground||{};
         resources.on("resourcesLoaded", handleLoad, this);
 
         // models
-        var liveData,
-            replayData;
+      /*  var liveData,
+            replayData;  */
 
         var pulsars = [];
         var orbits = [];
+        var visitor;
+        var incr = +0.1;
 
         /**
          * The assets are loaded
@@ -41,8 +43,9 @@ this.codamePlayground = this.codamePlayground||{};
 
             // instantiate the beacons
             var beacons = resources.getBeaconsModel();
+            var i;
 
-            for(var i=0; i<15;i++){
+            for(i=0; i<15;i++){
                 var b = beacons[Math.round(Math.random()*(beacons.length-1))];
                 var orbit = new codamePlayground.Orbit(resources.getOrbitsSS());
                 orbit.ui.x = b.position.x;
@@ -51,18 +54,16 @@ this.codamePlayground = this.codamePlayground||{};
                 orbits.push(orbit);
             }
 
-           for(var i=0; i< beacons.length; i++){
+            visitor = codamePlayground.Visitor(resources.getOrbitsSS());
+            visitor.setRoom(102);
+            stage.addChild(visitor.ui);
+
+           for(i=0; i< beacons.length; i++){
                 var pulsar = new codamePlayground.Pulsar(resources.getLightsSS());
                 pulsar.ui.x = beacons[i].position.x;
                 pulsar.ui.y = beacons[i].position.y;
                 pulsar.ui.scaleX = pulsar.ui.scaleY = 0.3;
                 pulsar.name = beacons[i].id;
-
-               /*var debug = resources.getDebugDot();
-               debug.x = i *15;
-               debug.y = i*15;    */
-
-                //console.log(pulsar);
 
                 stage.addChild(pulsar.ui);
                 pulsars.push(pulsar);
@@ -81,7 +82,33 @@ this.codamePlayground = this.codamePlayground||{};
                 pulsar.setIntensity(intensityInd[i]);
             }
 
-            for(var i=0; i<orbits.length; i++){
+
+            if(createjs.Ticker.getTicks()<250) {
+                visitor.keepAlive(102);
+            }
+            else if(createjs.Ticker.getTicks()>250 && createjs.Ticker.getTicks()<500){
+                visitor.keepAlive();
+            }
+            else if(createjs.Ticker.getTicks()==500){
+                visitor.moveToOrbit({x:565,y:225});
+            }
+            else if(createjs.Ticker.getTicks()==600){
+                visitor.moveToRoom(102);
+            }
+            else if(createjs.Ticker.getTicks()>900 && createjs.Ticker.getTicks()<1200){
+                visitor.keepAlive();
+            }
+            else if(createjs.Ticker.getTicks()== 1200){
+                visitor.moveToOrbit({x:388,y:225});
+            }
+            else if(createjs.Ticker.getTicks()== 1300){
+                visitor.moveToRoom(101);
+            }
+            else if(createjs.Ticker.getTicks()== 1500){
+                visitor.moveToRoom(102);
+            }
+
+            for(i=0; i<orbits.length; i++){
                 orbits[i].setIntensity(Math.round(Math.random()*100));
             }
 

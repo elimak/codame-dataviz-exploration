@@ -57,8 +57,8 @@ this.codamePlayground = this.codamePlayground||{};
                 l.x = Math.cos(convertAngle(angles[i])) * radius[i] - LIGHT_WIDTH* l.scaleX/2;
                 l.y = Math.sin(convertAngle(angles[i])) * radius[i] - LIGHT_HEIGHT* l.scaleX/2;
 
-                res.push(l);
                 if(alpha != 0)   {
+                    res.push(l);
                     parent.addChild(l);
                 }
                 l.alpha = alpha;
