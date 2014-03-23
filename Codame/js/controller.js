@@ -14,9 +14,8 @@ this.codamePlayground = this.codamePlayground||{};
 
     var Controller = function(){
 
-        var intensityInd = [25, 12,98, 50];
-        var intensityInc = [0.2, 0.2, 0.2, 0.2];
-
+        var intensityInd = [25, 12,98, 50, 95, 50, 95, 87, 54, 12, 95, 87, 54, 12 ];
+        var intensityInc = [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2];
 
         var stage,
             mode; // live or replay
@@ -29,24 +28,41 @@ this.codamePlayground = this.codamePlayground||{};
             replayData;
 
         var pulsars = [];
+        var orbits = [];
 
         /**
          * The assets are loaded
          * @param evt
          */
         function handleLoad(evt){
-           // set the framerate of the whole visualization
+           // set the frame rate of the whole visualization
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
             createjs.Ticker.on("tick", tick, this);
 
             // instantiate the beacons
             var beacons = resources.getBeaconsModel();
 
-            for(var i=0; i< beacons.length; i++){
+            for(var i=0; i<15;i++){
+                var b = beacons[Math.round(Math.random()*(beacons.length-1))];
+                var orbit = new codamePlayground.Orbit(resources.getOrbitsSS());
+                orbit.ui.x = b.position.x;
+                orbit.ui.y = b.position.y;
+                stage.addChild(orbit.ui);
+                orbits.push(orbit);
+            }
+
+           for(var i=0; i< beacons.length; i++){
                 var pulsar = new codamePlayground.Pulsar(resources.getLightsSS());
                 pulsar.ui.x = beacons[i].position.x;
                 pulsar.ui.y = beacons[i].position.y;
-                pulsar.name = beacons[i].name;
+                pulsar.ui.scaleX = pulsar.ui.scaleY = 0.3;
+                pulsar.name = beacons[i].id;
+
+               /*var debug = resources.getDebugDot();
+               debug.x = i *15;
+               debug.y = i*15;    */
+
+                //console.log(pulsar);
 
                 stage.addChild(pulsar.ui);
                 pulsars.push(pulsar);
@@ -59,11 +75,16 @@ this.codamePlayground = this.codamePlayground||{};
                 var pulsar = pulsars[i];
 
                 intensityInd[i] += intensityInc[i];
-                if(intensityInd[i] > 100) intensityInc[i] = -0.05;
+                if(intensityInd[i] > 80) intensityInc[i] = -0.05;
                 if(intensityInd[i] < 0) intensityInc[i] = +0.05;
 
                 pulsar.setIntensity(intensityInd[i]);
             }
+
+            for(var i=0; i<orbits.length; i++){
+                orbits[i].setIntensity(Math.round(Math.random()*100));
+            }
+
             stage.update(evt);
         }
 

@@ -161,8 +161,6 @@ this.codamePlayground = this.codamePlayground||{};
                         break;
                 }
 
-                //updateDirection();
-
                 applyVariation();
 
                 frequency = 8+lightIndex/6;
@@ -170,7 +168,6 @@ this.codamePlayground = this.codamePlayground||{};
 
                 for(var i=0; i < angles.length; i++){
                     angles[i] = angles[i] +(lightIndex/25 * 0.8);
-                   // radius[i] = 10+lightIndex/15;
                     radius[i] = 10+lightIndex/15 + Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude;
                 }
 
@@ -187,103 +184,3 @@ this.codamePlayground = this.codamePlayground||{};
 
      codamePlayground.Pulsar = Pulsar;
 }());
-
-
-/*
-function lightMaker() {
-    var lightObj = new createjs.SpriteContainer();
-    lightObj.layers = [];
-    lightObj.layers[0] = getLayer("light0"); // coldest lights
-    lightObj.layers[1] = getLayer("light1");
-    lightObj.layers[2] = getLayer("light2");
-    lightObj.layers[3] = getLayer("light3");
-    lightObj.layers[4] = getLayer("light4"); // warmest lights
-
-    function getLayer(imgId){
-
-        var res = [];
-        for(var i=0; i < 3; i++){
-            var l = new createjs.Sprite(lightsSS, imgId);
-            l.x = Math.cos(convertAngle(angles[i])) * radius[i] - LIGHT_WIDTH/2;
-            l.y = Math.sin(convertAngle(angles[i])) * radius[i] - LIGHT_HEIGHT/2;
-            res.push(l);
-            lightObj.addChild(l);
-        }
-        return res;
-    }
-
-    function getRangeValue (range1, range2, value){
-        if( value < range1[0] || value > range1[1] ){
-            return 0;
-        }
-        else{
-            var prcnt = Math.round((value - range1[0]) / (range1[1] - range1[0]) * 100);
-
-            return (range2[1] - range2[0]) * prcnt / 100 + range2[0];
-        }
-    }
-
-    function setLayers(index, intensity){
-        var set = lightObj.layers[index];
-        var sX, sY, a;
-
-        switch (index){
-            case 0:         // range is [0, 20]
-                sX = sY = getRangeValue([-10, 30], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
-                a = getRangeValue([-10, 10], [0, 1], intensity);             // scale range is [0.1, 1.2]
-                a = a!= 0 ? a : getRangeValue([10, 30], [1, 0], intensity);  // scale range is [0.1, 1.2]
-                // console.log("case 0 = "+sX+" -alpha- "+a);
-                break;
-            case 1:         // range is [20, 40]
-                sX = sY = getRangeValue([10, 50], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
-                a = getRangeValue([10, 30], [0, 1], intensity);             // scale range is [0.1, 1.2]
-                a = a!= 0 ? a : getRangeValue([30, 50], [1, 0], intensity);  // scale range is [0.1, 1.2]
-                //  console.log("case 1 = "+sX+" -alpha- "+a);
-                break;
-            case 2:         // range is [40, 60]
-                sX = sY = getRangeValue([30, 70], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
-                a = getRangeValue([30, 50], [0, 1], intensity);             // scale range is [0.1, 1.2]
-                a = a!= 0 ? a : getRangeValue([50, 70], [1, 0], intensity);  // scale range is [0.1, 1.2]
-                // console.log("case 2 = "+sX+" -alpha- "+a);
-                break;
-            case 3:         // range is [60, 80]
-                sX = sY = getRangeValue([50, 90], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
-                a = getRangeValue([50, 70], [0, 1], intensity);             // scale range is [0.1, 1.2]
-                a = a!= 0 ? a : getRangeValue([70, 90], [1, 0], intensity);  // scale range is [0.1, 1.2]
-                //  console.log("case 3 = "+sX+" -alpha- "+a);
-                break;
-            case 4:         // range is [80, 100]
-                sX = sY = getRangeValue([70, 110], [0.1, 1.2], intensity);   // scale range is [0.1, 1.2]
-                a = getRangeValue([70, 90], [0, 1], intensity);             // scale range is [0.1, 1.2]
-                a = a!= 0 ? a : getRangeValue([90,110], [1, 0], intensity);  // scale range is [0.1, 1.2]
-                //   console.log("case 4 = "+sX+" -alpha- "+a);
-                break;
-        }
-        for(var i=0; i < 3; i++){
-            var l = set[i];
-            l.scaleX = sX;
-            l.scaleY = sY;
-            l.x = Math.cos(convertAngle(angles[i])) * radius[i]*(sX+0.2) - LIGHT_WIDTH/2*sX;
-            l.y = Math.sin(convertAngle(angles[i])) * radius[i]*(sY+0.2) - LIGHT_HEIGHT/2*sY;
-            l.alpha = a;
-        }
-    }
-
-
-    var topLight = new createjs.Sprite(lightsSS, "light5");
-    topLight.scaleX = 0.5;
-    topLight.scaleY = 0.5;
-    topLight.x = - LIGHT_WIDTH/2 * topLight.scaleX;
-    topLight.y = - LIGHT_HEIGHT/2 * topLight.scaleY;
-    lightObj.addChild(topLight);
-
-    return {
-        target: lightObj,
-        setIntensity : function( intensity ){ // from 0 to 100
-            setLayers(0, intensity);
-            setLayers(1, intensity);
-            setLayers(2, intensity);
-            setLayers(3, intensity);
-            setLayers(4, intensity);
-        }
-    };*/

@@ -18,6 +18,7 @@ this.codamePlayground = this.codamePlayground||{};
         queue.on("complete", handleLoad, this);
 
         var lightsSS;
+        var orbitsSS;
 
         function handleLoad(evt) {
             publicApi.dispatchEvent("resourcesLoaded");
@@ -26,10 +27,11 @@ this.codamePlayground = this.codamePlayground||{};
         var publicApi = {
             load: function(){
                 queue.loadManifest([
+                    {id: "orbits", src: "assets/lights2.png"},
                     {id: "lights", src: "assets/lights7.png"},
+                    {id: "circle", src: "assets/circle.jpg"},
                     {id: "beacons", src: "assets/beacons.json"}
                 ], true);
-                console.log("request loading");
             },
             getLightsSS: function(){
                 if(lightsSS == null){
@@ -53,6 +55,32 @@ this.codamePlayground = this.codamePlayground||{};
                     });
                 }
                 return lightsSS;
+            },
+            getOrbitsSS: function(){
+                if(orbitsSS == null){
+                    orbitsSS = new createjs.SpriteSheet({
+                        "animations":{
+                            "orbit0": [0, 0],
+                            "orbit1": [1, 1],
+                            "orbit2": [2, 2],
+                            "orbit3": [3, 3],
+                            "orbit4": [4, 4],
+                            "orbit5": [5, 5],
+                            "orbit6": [6, 6]},
+                        "images": [queue.getResult("orbits")],
+                        "frames": {
+                            "height": 140,
+                            "width":140,
+                            "regX": 0,
+                            "regY": 0,
+                            "count": 7
+                        }
+                    });
+                }
+                return orbitsSS;
+            },
+            getDebugDot : function() {
+               return new createjs.Bitmap("assets/circle.jpg");
             },
             getBeaconsModel: function(){
                 return queue.getResult("beacons");
