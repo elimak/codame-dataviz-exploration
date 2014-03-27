@@ -30,7 +30,8 @@ this.codamePlayground = this.codamePlayground||{};
                     {id: "orbits", src: "assets/lights2.png"},
                     {id: "lights", src: "assets/lights7.png"},
                     {id: "circle", src: "assets/circle.jpg"},
-                    {id: "beacons", src: "assets/beacons.json"}
+                    {id: "beacons", src: "assets/beacons.json"},
+                    {id: "visitors", src: "assets/data50Sorted.json"}
                 ], true);
             },
             getLightsSS: function(){
@@ -84,6 +85,9 @@ this.codamePlayground = this.codamePlayground||{};
             },
             getBeaconsModel: function(){
                 return queue.getResult("beacons");
+            },
+            getVisitorsModel: function(){
+                return queue.getResult("visitors");
             }
         };
         // make sure we "extends" the EventDispatcher

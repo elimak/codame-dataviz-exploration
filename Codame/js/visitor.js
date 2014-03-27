@@ -12,10 +12,16 @@ this.codamePlayground = this.codamePlayground||{};
 (function() {
     "use strict";
 
-    var Visitor = function( orbitsSS ){
+    var Visitor = function( orbitsSS, inId ){
 
-        var ROOMS = {102:{minX:250, maxX:500,y:285},
-                      101:{minX:520, maxX:690,y:285}};
+        var id = inId;
+
+        var ROOMS = {
+            102:{minX:250, maxX:500,y:285},
+            101:{minX:520, maxX:680,y:285},
+            201:{minX:505, maxX:680,y:155},
+            2:{minX:120, maxX:200,y:415},
+            1:{minX:250, maxX:680,y:415}};
 
         var currentRoomID;
 
@@ -196,6 +202,16 @@ this.codamePlayground = this.codamePlayground||{};
             },
             rotate: function(angle){
                tail.rotation = angle;
+            },
+            reset:function(inId){
+                color = Math.random()*6;
+                id = inId;
+            },
+            getId : function(){
+                return id;
+            },
+            getColor: function(){
+              return color;
             },
             moveToRoom: function(roomID){
                 currentRoomID = roomID;
