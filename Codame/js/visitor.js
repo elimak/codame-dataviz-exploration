@@ -40,35 +40,33 @@ this.codamePlayground = this.codamePlayground||{};
         var globalAngle = Math.round(Math.random()*359);
 
         var target = new createjs.SpriteContainer();
-        var lights = [];
-        var tail;
         var speed = -0.5;
 
-        var light = new createjs.SpriteContainer();
-        light.layers = [];
-        light.layers[0] = getLayer("orbit0", 0, light); // coldest lights
-        light.layers[1] = getLayer("orbit1", 1, light);
-        light.layers[2] = getLayer("orbit2", 2, light);
-        light.layers[3] = getLayer("orbit3", 3, light);
-        light.layers[4] = getLayer("orbit4", 4, light);
-        light.layers[5] = getLayer("orbit5", 5, light); // warmest lights
-        light.layers[6] = getLayer("orbit6", 6, light); // white lights
+        var light, tail;
 
-        tail = new createjs.SpriteContainer();
-        tail.layers = [];
-        tail.layers[0] = getTailLayer("orbit0", 0, tail); // coldest lights
-        tail.layers[1] = getTailLayer("orbit1", 1, tail);
-        tail.layers[2] = getTailLayer("orbit2", 2, tail);
-        tail.layers[3] = getTailLayer("orbit3", 3, tail);
-        tail.layers[4] = getTailLayer("orbit4", 4, tail);
-        tail.layers[5] = getTailLayer("orbit5", 5, tail); // warmest lights
-        tail.layers[6] = getTailLayer("orbit6", 6, tail); // white lights
+        function init(){
+            if(target && target.getNumChildren() != 0) {
+                target.removeAllChildren();
+            }
+            if(light && light.getNumChildren() != 0) {
+                light.removeAllChildren();
+            }
+            if(tail && tail.getNumChildren() != 0) {
+                tail.removeAllChildren();
+            }
+            light = new createjs.SpriteContainer();
+            light.layers = [];
+            tail = new createjs.SpriteContainer();
+            tail.layers = [];
 
-        target.addChild(tail);
-        lights.push(light);
-
-        target.addChild(light);
-        lights.push(light);
+            for(var i=0; i < 7; i++){
+                light.layers[i] = getLayer("orbit"+i, i, light); // coldest to warmest lights
+                tail.layers[i]  = getTailLayer("orbit"+i, i, tail); // coldest to warmest lights
+            }
+            target.addChild(tail);
+            target.addChild(light);
+        }
+        init();
 
         function getLayer(imgId, id, parent){
 
@@ -99,12 +97,10 @@ this.codamePlayground = this.codamePlayground||{};
             var alpha = ( color > id && color <= (id +1) )? color - id : 0;
             alpha = ( color < id && (color+1) >= id )? id - color : alpha;
 
-          //  console.log("-----------------------");
             for(var i=0; i < 15; i++){
                 var l = new createjs.Sprite(orbitsSS, imgId);
                 l.scaleX = 0.2+0.5*(i/15);
                 l.scaleY = 0.05-0.05*(i/15);  // goes from 0.05 to 0.001
-               // console.log("l.scaleX "+l.scaleX+" // l.scaleY "+l.scaleY+" -- i "+i);
 
                 l.x = 3*i- l.scaleX* LIGHT_WIDTH/4;
                 l.y = -l.scaleY * LIGHT_HEIGHT/2;
@@ -115,9 +111,7 @@ this.codamePlayground = this.codamePlayground||{};
                     l.xRef = l.x;
                     l.alphaRef = alpha*((15-i)/15);
                     l.alpha = alpha*((15-i)/15);
-                  // console.log("alpha "+alpha+" - imgId "+imgId+" tail");
                 }
-
             }
             return res;
         }
@@ -128,26 +122,23 @@ this.codamePlayground = this.codamePlayground||{};
 
         function hideHead(){
             var childNr,l;
-            for(var i=0; i<lights.length; i++){
-                childNr = lights[i].getNumChildren();
-                for(var j=0; j < childNr; j++){
-                    l =  lights[i].getChildAt(j);
-                    l.alpha = 0;
-                }
+            childNr = light.getNumChildren();
+            for(var j=0; j < childNr; j++){
+                l =  light.getChildAt(j);
+                l.alpha = 0;
             }
+
             createjs.Tween.get(tail, {override:true}).to({scaleX:0}, 200);
         }
 
         function showHead(){
             var childNr,l;
-            for(var i=0; i<lights.length; i++){
-                childNr = lights[i].getNumChildren();
-                for(var j=0; j < childNr; j++){
-                    l =  lights[i].getChildAt(j);
-                    l.scaleX = 0.2;
-                    l.x = l.xRef-l.scaleX*LIGHT_WIDTH/4;
-                    l.alpha = l.alphaRef* Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)+0.1;
-                }
+            childNr = light.getNumChildren();
+            for(var j=0; j < childNr; j++){
+                l =  light.getChildAt(j);
+                l.scaleX = 0.2;
+                l.x = l.xRef-l.scaleX*LIGHT_WIDTH/4;
+                l.alpha = l.alphaRef* Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)+0.1;
             }
         }
 
@@ -176,19 +167,16 @@ this.codamePlayground = this.codamePlayground||{};
 
                 var childNr;
                 var l;
-                for(var i=0; i<lights.length; i++){
-                    childNr = lights[i].getNumChildren();
-                    for(var j=0; j < childNr; j++){
-                        l =  lights[i].getChildAt(j);
-                        l.alpha = l.alphaRef* Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)+0.1;
-                        l.scaleX = Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)/6 + 0.1;
+                childNr = light.getNumChildren();
+                for(var j=0; j < childNr; j++){
+                    l =  light.getChildAt(j);
+                    l.alpha = l.alphaRef* Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)+0.1;
+                    l.scaleX = Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude)/6 + 0.1;
 
-                        l.x = l.xRef-l.scaleX*LIGHT_WIDTH/4;
-                    }
+                    l.x = l.xRef-l.scaleX*LIGHT_WIDTH/4;
                 }
-                //tail.rotation = globalAngle;
+
                 tail.scaleX = Math.abs(Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude);
-                //tail.alpha = tail.scaleX;
                 globalAngle++;
             },
             moveToOrbit : function(point){
@@ -206,6 +194,7 @@ this.codamePlayground = this.codamePlayground||{};
             reset:function(inId){
                 color = Math.random()*6;
                 id = inId;
+                init();
             },
             getId : function(){
                 return id;

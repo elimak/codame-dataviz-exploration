@@ -193,6 +193,7 @@ this.codamePlayground = this.codamePlayground||{};
                          releaseOrbit(orbitToUpdate);
                     }
                     else if(activeVisitors[visLoop].ibeacons.length === 1){
+
                         // treating an exception here !!
                         if(activeVisitors[visLoop].ibeacons[0] === 1013) {
 
@@ -278,6 +279,7 @@ this.codamePlayground = this.codamePlayground||{};
                 if(pulsar.intensityInd < min) pulsar.intensityInc = +1;
 
                 pulsar.setIntensity(pulsar.intensityInd);
+                pulsar.ui.scaleX = pulsar.ui.scaleY = 0.2+0.2*pulsar.intensityInd/100;
             }
 
             stage.update(evt);

@@ -85,26 +85,22 @@ this.codamePlayground = this.codamePlayground||{};
                 color = inColor;
                 if(!light.parent){
                     init();
-                   // console.log("-------------------------- >Orbit id "+id+" - was recycled and should now be visible");
                 }
             },
             show: function(){
                 if(!light.parent){
                     target.addChild(light);
-                    // console.log("-------------------------- >Orbit id "+id+" - was hidden and should now be visible");
                 }
             },
             hide: function(){
                 if(light.parent){
                     target.removeChild(light);
-                    // console.log("-------------------------- >Orbit id "+id+" - removing light children!");
                 }
 
             },
             setIntensity : function(intensity){
                 var ang;
                 for(var i=0; i<lights.length; i++){
-
                     lights[i].scaleX = lights[i].scaleY = 0.5+Math.sin(createjs.Ticker.getTicks()/frequency)*amplitude - (0.05*i);
                     ang = globalAngle+i*intensity/100;//lights[i].scaleX;
                     lights[i].x = Math.cos(ang) * (Math.round(Math.random()*2)+20);
